@@ -1,0 +1,66 @@
+server:
+  port: 8085
+spring:
+  application:
+    name: mic-gateway
+  # 注册中心地址配置
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      # 配置中心地址配置
+      config:
+        server-addr: 127.0.0.1:8848
+        # 定义配置文件后缀为.properties
+        file-extension: properties
+        # 配置文件默认分组为DEFAULT_GROUP
+        group: DEFAULT_GROUP
+    gateway:
+      discovery:
+        locator:
+          #  注册中心自动发现 默认为 false
+          enabled: true
+      routes:
+        # 唯一标识
+        - id: mic-order
+          # 转发路径-静态路由
+          # uri: http://localhost:8083
+          # 转发路径-动态路由
+          uri: lb://mic-order
+          # 断言,用于请求网关路径的匹配规则
+          predicates:
+          - Path=/order/**
+          filters:
+            # 配置了name为Hystrix的filter，实际是对应HystrixGatewayFilterFactory
+            - name: Hystrix
+              args:
+                name: fallbackA
+                fallbackUri: forward:/fallbackA
+
+        - id: mic-transport
+          # 转发路径-动态路由
+          uri: lb://mic-transport
+          # 断言,用于请求网关路径的匹配规则
+          predicates:
+          - Path=/trans/**
+  # 指定该command的超时时间
+  hystrix.command.fallbackCmdA.execution.isolation.thread.timeoutInMilliseconds: 5000
+  # 定义环境为dev
+  profiles:
+    active: dev
+    # 配置Sentinel dashboard地址
+    sentinel:
+      transport:
+        port: 8719
+        dashboard: localhost:8080
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  # 配置数据源
+  datasource:
+    url: jdbc:mysql://116.62.107.141:3306/demo2?useUnicode=true&charactorEncoding=UTF-8
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: root
