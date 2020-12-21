@@ -1,0 +1,8 @@
+server:
+  port: 8100
+spring:
+  datasource:
+    url: jdbc:mysql://116.62.107.141:3306/spring_security?useUnicode=true&charactorEncoding=UTF-8
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: root
