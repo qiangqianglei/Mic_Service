@@ -22,6 +22,12 @@ public class TransportController {
         return orderFeign.getOrder();
     }
 
+    @ApiOperation("测试订单超时接口")
+    @GetMapping("/orderTimeout")
+    public String orderTimeout() {
+        return orderFeign.timeout();
+    }
+
     @ApiOperation("获取trans接口")
     @GetMapping("/getTrans")
     public String getTrans() {

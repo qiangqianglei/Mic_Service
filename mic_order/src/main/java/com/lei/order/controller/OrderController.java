@@ -32,4 +32,11 @@ public class OrderController {
     public List<User> getUserList() {
        return userMapper.selectList(null);
     }
+
+    @GetMapping("/timeout")
+    public String timeout() throws InterruptedException {
+        Thread thread = new Thread();
+        thread.sleep(3 * 1000);
+        return "order服务timeout方法执行..";
+    }
 }

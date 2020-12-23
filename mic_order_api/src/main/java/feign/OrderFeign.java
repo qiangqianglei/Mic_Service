@@ -10,4 +10,11 @@ public interface OrderFeign {
 
     @GetMapping("/getOrder")
     String getOrder();
+
+    /**
+     * 测试超时
+     * @return
+     */
+    @GetMapping("/timeout")
+    String timeout();
 }
