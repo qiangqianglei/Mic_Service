@@ -23,7 +23,7 @@ spring:
     gateway:
       discovery:
         locator:
-          #  注册中心自动发现 默认为 false
+          #  开启从注册中心动态创建路由功能,利用微服务名称进行路由
           enabled: true
       routes:
         # 唯一标识
@@ -35,6 +35,8 @@ spring:
           # 断言,用于请求网关路径的匹配规则
           predicates:
           - Path=/order/**
+          #- Cookie=username,leiqq
+          #- Method=GET
           filters:
             # 配置了name为Hystrix的filter，实际是对应HystrixGatewayFilterFactory
             - name: Hystrix

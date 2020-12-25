@@ -1,5 +1,7 @@
 package com.lei.order.controller;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.lei.order.entity.User;
 import com.lei.order.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -38,5 +41,16 @@ public class OrderController {
         Thread thread = new Thread();
         thread.sleep(3 * 1000);
         return "order服务timeout方法执行..";
+    }
+
+    @GetMapping("/testHotKey")
+    @SentinelResource(value = "testHotKey", blockHandler = "testHotKeyHandler")
+    public String testHotKey(@RequestParam (name = "p1", required = false) String p1,
+                             @RequestParam (name = "p2", required = false) String p2) {
+        return "===========================testHotKey";
+    }
+
+    public String testHotKeyHandler(String p1, String p2, BlockException exception) {
+        return "===========================testHotKeyHandler 0~0";
     }
 }
