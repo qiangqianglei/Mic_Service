@@ -6,6 +6,7 @@ import cn.hutool.core.util.IdUtil;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
+import java.util.concurrent.*;
 
 /**
  * @author ：leiqq
@@ -24,12 +25,32 @@ public class IDDemo {
 //        System.out.println(new SimpleDateFormat("yyyy-MM-dd").format(date));
 //
 //        System.out.println(2039 - 1970);
+//
+//        Long workerId = 0L;
+//        Long datacenterId = 1L;
+//        Snowflake snowflake = IdUtil.getSnowflake(workerId, datacenterId);
+//        long nextId = snowflake.nextId();
+//        System.out.println(nextId);
+//
+//        System.out.println(Long.toString(nextId).length());
+        getIDBySnowFlake();
+    }
 
-        Long workerId = 0L;
-        Long datacenterId = 1L;
-        Snowflake snowflake = IdUtil.getSnowflake(workerId, datacenterId);
-        System.out.println(snowflake.nextId());
+    public static void getIDBySnowFlake() {
 
-        System.out.println("1342358390034268160".length());
+        ExecutorService threadPool=new ThreadPoolExecutor(2,5,
+                1L, TimeUnit.SECONDS,
+                new LinkedBlockingQueue<>(3),
+                Executors.defaultThreadFactory(),
+                new ThreadPoolExecutor.AbortPolicy());
+        for (int i = 1; i <= 20; i++) {
+            threadPool.submit(() -> {
+                Long workerId = 0L;
+                Long datacenterId = 1L;
+                Snowflake snowflake = IdUtil.getSnowflake(workerId, datacenterId);
+                long nextId = snowflake.nextId();
+                System.out.println(nextId);
+            });
+        }
     }
 }

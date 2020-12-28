@@ -26,6 +26,5 @@ hs_err_pid*
 *.iml
 *.ipr
 *.iws
-
 /mic_order_api/target/
 /.idea/
